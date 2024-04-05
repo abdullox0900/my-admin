@@ -1,5 +1,8 @@
 import { useEffect } from 'react'
 import useTitle from '../../hooks/useTitle'
+import TopFilter from '../../components/top_filter/top_filter'
+import Main from '../../components/main/main'
+import TeachersList from '../../components/teachers_list/teachers_list'
 
 export default function Teachers() {
 
@@ -10,8 +13,10 @@ export default function Teachers() {
 
     }, [])
 
-
     return (
-        <h1>Teachers</h1>
+        <Main>
+            <TopFilter />
+            <TeachersList />
+        </Main>
     )
 }
