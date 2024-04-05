@@ -2,9 +2,9 @@ import { createContext, useState } from "react"
 
 import { childrenType } from '../types/children-type'
 
-type TextContext = object
+// type TextContext = object
 
-const Context = createContext<TextContext>({})
+const Context = createContext({})
 
 function TextProvider(props: childrenType) {
 
