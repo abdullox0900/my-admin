@@ -1,12 +1,44 @@
+import { useEffect, useState } from 'react'
 import { IoIosArrowBack } from "react-icons/io"
 import { Outlet } from "react-router-dom"
+import useSidebarToggle from '../hooks/useToggle'
 import Header from './header'
 import Sidebar from './sidebar'
-import useSidebarToggle from '../hooks/useToggle'
 
 export default function LayoutComponent() {
 
     const { modifier, setModifier } = useSidebarToggle()
+
+    // const detectiveKeyDown = (e) => {
+    //     if (e.key == 't') {
+    //         setModifier(!modifier)
+    //     }
+    // }
+
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 't') {
+                setModifier(!modifier)
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [modifier, setModifier])
+
+
+
+
+
+
+
+
+
+
+
 
     return (
         <div className='flex flex-row h-screen w-screen overflow-hidden'>
