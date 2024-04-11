@@ -1,12 +1,29 @@
+// Import React
 import { useEffect, useState } from 'react'
-import Main from '../../components/main/main'
-import useTitle from '../../hooks/useTitle'
-import { Input, Select } from 'antd'
+
+// Import Package
+import { Empty, Input, Select, Spin } from 'antd'
+import axios from 'axios'
+
+// Import React Icons
 import { IoIosAdd } from "react-icons/io"
 
-import 'react-responsive-modal/styles.css'
-import { Modal } from 'react-responsive-modal'
+// Import React Query
+import { useQuery } from '@tanstack/react-query'
+
+// Import Type
+import { StudentObj } from '../../types/student-type'
+
+// Import Local
 import StudentForm from '../../components/forms/student_form/student_form'
+import Main from '../../components/main/main'
+import useTitle from '../../hooks/useTitle'
+
+// Import React Modal
+import { Modal } from 'react-responsive-modal'
+import 'react-responsive-modal/styles.css'
+import { NavLink } from 'react-router-dom'
+
 
 export default function Students() {
 
@@ -20,11 +37,23 @@ export default function Students() {
         setTitle('Students List')
     }, [])
 
-    useEffect(() => {
-        // axios('')
-    }, [])
+    const studentsData = async () => {
+        const response = await axios.get('https://edu.backofficee.uz/api/v1/students/')
+        return response.data
+    }
 
-    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    const { isLoading, isError, data } = useQuery({
+        queryKey: ['student'],
+        queryFn: studentsData
+    })
+
+    console.log(data)
+
+
+    // ======= // Is Error // ======= //
+    if (isError) {
+        return <h1>Malumot olishda xatoli yuzberdi</h1>
+    }
 
     return (
         <Main>
@@ -75,26 +104,39 @@ export default function Students() {
                 <span className='w-[150px] font-semibold text-[#4D525B] text-[14px]'>Status</span>
                 <span className='w-[150px] font-semibold text-[#4D525B] text-[14px] text-right'>Amallar</span>
             </div>
-            <ul className='flex flex-col gap-[15px]'>
-                {
-                    arr.map((item) => {
-                        return (
-                            <li className='flex justify-between w-[100%] rounded-[10px] px-[18px] p-[15px] shadow-[rgba(0,0,0,0.16)_0px_1px_4px] hover:shadow-[rgba(99,99,99,0.2)_0px_2px_8px_0px] cursor-pointer transition-all ease' key={item}>
-                                <span className='w-[100px] text-[14px] text-slate-400'>#122</span>
-                                <span className='w-[200px] text-[14px] text-slate-400'>Abdulloh Abdusalomov</span>
-                                <span className='w-[150px] text-[14px] text-slate-400'>F4</span>
-                                <span className='w-[150px] text-[14px] text-slate-400'>Rozivoy</span>
-                                <span className='w-[150px] text-[14px] text-slate-400'>Foundation (F22-254)</span>
-                                <span className='w-[150px] text-[14px] text-slate-400'>90-400-10-10</span>
-                                <span className='w-[150px] text-[14px] text-slate-400'>200.000 so’m</span>
-                                <span className='w-[150px] text-[14px] text-slate-400'>O’qiyabdi</span>
-                                <span className='w-[150px] text-[14px] text-slate-400 text-right'>---</span>
-                            </li>
-                        )
-                    })
-                }
 
-            </ul>
+            {
+                data?.length == 0 ? (
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                ) : (
+                    <ul className='flex flex-col gap-[15px]'>
+                        {
+                            isLoading ? (
+                                <Spin />
+                            ) : (
+                                data?.map((item: StudentObj) => {
+                                    return (
+                                        <li key={item.id}>
+                                            <NavLink className='flex justify-between w-[100%] rounded-[10px] px-[18px] p-[15px] shadow-[rgba(0,0,0,0.16)_0px_1px_4px] hover:shadow-[rgba(99,99,99,0.2)_0px_2px_8px_0px] cursor-pointer transition-all ease' to={`/student_page/${item.id}`}>
+                                                <span className='w-[100px] text-[14px] text-slate-400'>{item.id}</span>
+                                                <span className='w-[200px] text-[14px] text-slate-400'>{`${item.first_name} ${item.last_name}`}</span>
+                                                <span className='w-[150px] text-[14px] text-slate-400'>F4</span>
+                                                <span className='w-[150px] text-[14px] text-slate-400'>Rozivoy</span>
+                                                <span className='w-[150px] text-[14px] text-slate-400'>Foundation (F22-254)</span>
+                                                <span className='w-[150px] text-[14px] text-slate-400'>{item.phone}</span>
+                                                <span className='w-[150px] text-[14px] text-slate-400'>200.000 so’m</span>
+                                                <span className='w-[150px] text-[14px] text-slate-400'>{item.status == 2 ? 'O’qiyabdi' : 'Nomalum'}</span>
+                                                <span className='w-[150px] text-[14px] text-slate-400 text-right'>---</span>
+                                            </NavLink>
+                                        </li>
+                                    )
+                                })
+                            )
+                        }
+                    </ul>
+                )
+            }
+
             <Modal open={open} onClose={onCloseModal} center
                 classNames={{
                     overlay: 'customOverlay',
