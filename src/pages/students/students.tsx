@@ -93,7 +93,7 @@ export default function Students() {
                     <IoIosAdd className='text-[#ffff]' />
                 </button>
             </div>
-            <div className='flex justify-between w-[100%] rounded-[10px] p-[18px] shadow-[rgba(0,0,0,0.16)_0px_1px_4px] mb-[25px]'>
+            <div className='flex justify-between w-[100%] rounded-[10px] p-[18px] mb-[25px]'>
                 <span className='w-[100px] font-semibold text-[#4D525B] text-[14px]'>ID</span>
                 <span className='w-[200px] font-semibold text-[#4D525B] text-[14px]'>F.I.O</span>
                 <span className='w-[150px] font-semibold text-[#4D525B] text-[14px]'>Guruh</span>
@@ -117,7 +117,7 @@ export default function Students() {
                                 data?.map((item: StudentObj) => {
                                     return (
                                         <li key={item.id}>
-                                            <NavLink className='flex justify-between w-[100%] rounded-[10px] px-[18px] p-[15px] shadow-[rgba(0,0,0,0.16)_0px_1px_4px] hover:shadow-[rgba(99,99,99,0.2)_0px_2px_8px_0px] cursor-pointer transition-all ease' to={`/student_page/${item.id}`}>
+                                            <NavLink className='flex justify-between w-[100%] rounded-[10px] px-[18px] p-[15px] border border-[#d9d9d9] hover:shadow-[rgba(99,99,99,0.2)_0px_2px_8px_0px] cursor-pointer transition-all ease' to={`/student_page/${item.id}`}>
                                                 <span className='w-[100px] text-[14px] text-slate-400'>{item.id}</span>
                                                 <span className='w-[200px] text-[14px] text-slate-400'>{`${item.first_name} ${item.last_name}`}</span>
                                                 <span className='w-[150px] text-[14px] text-slate-400'>F4</span>

@@ -1,9 +1,7 @@
 import { createContext, useEffect, useState } from "react"
 import { childrenType } from '../types/children-type'
 
-type SidebarType = object
-
-const Context = createContext<SidebarType>({})
+const Context = createContext({})
 
 function SidebarToggle(props: childrenType) {
 

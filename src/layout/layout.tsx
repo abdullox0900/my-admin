@@ -30,16 +30,6 @@ export default function LayoutComponent() {
     }, [modifier, setModifier])
 
 
-
-
-
-
-
-
-
-
-
-
     return (
         <div className='flex flex-row h-screen w-screen overflow-hidden'>
             <Sidebar />

@@ -1,9 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { Empty, Input, Select, Spin } from 'antd'
+import type { MenuProps } from 'antd'
+import { Dropdown, Empty, Input, Select, Spin } from 'antd'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { CiMenuKebab } from "react-icons/ci"
 import { IoIosAdd } from 'react-icons/io'
+import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md"
 import Modal from 'react-responsive-modal'
+import { NavLink } from 'react-router-dom'
 import TeacherForm from '../../components/forms/teacher_form/teacher_form'
 import Main from '../../components/main/main'
 import useTitle from '../../hooks/useTitle'
@@ -22,13 +26,35 @@ interface DataType {
     phone: string
 }
 
+
 export default function Teachers() {
 
     const { setTitle } = useTitle()
     const [open, setOpen] = useState(false)
+    const [teacherId, setTeacherId] = useState<number>(0)
 
     const onOpenModal = () => setOpen(true)
     const onCloseModal = () => setOpen(false)
+
+    const items: MenuProps['items'] = [
+        {
+            label: <button className='flex items-center gap-[10px]' onClick={() => {
+                teacherUpdate(teacherId)
+                onOpenModal()
+            }}>
+                <MdOutlineEdit className='text-blue-500' />
+                edit
+            </button>,
+            key: '0',
+        },
+        {
+            label: <button className='flex items-center gap-[10px]' onClick={() => teacherRemove(teacherId)}>
+                <MdDeleteOutline className='text-red-500' />
+                delete
+            </button>,
+            key: '1',
+        },
+    ]
 
     useEffect(() => {
         setTitle('Teachers list')
@@ -41,10 +67,29 @@ export default function Teachers() {
         return response.data
     }
 
+    async function teacherRemove(id: number) {
+        console.log(id)
+
+        const response = await axios.delete(`https://edu.backofficee.uz/api/v1/teachers/${id}`)
+        console.log(response)
+
+        return response
+    }
+
+    async function teacherUpdate(id: number) {
+        console.log(id)
+
+        const response = await axios.put(`https://edu.backofficee.uz/api/v1/teachers/${id}`)
+        console.log(response)
+
+        return response.data
+    }
+
     const { isLoading, isError, data } = useQuery({
         queryKey: ['teacher'],
         queryFn: teachersData
     })
+
 
     // ======= // Is Error // ======= //
     if (isError) {
@@ -95,15 +140,26 @@ export default function Teachers() {
                                 ) : (
                                     data?.slice(0, 8)?.map((item: DataType) => {
                                         return (
-                                            <li className='flex items-center justify-between w-[100%] px-[18px] py-[15px] bg-white border border-gray-200  rounded-[8px] cursor-pointer transition-all ease hover:bg-gray-200' key={item.id}>
+                                            <li key={item.id} className='flex items-center justify-between w-[100%] px-[18px] py-[15px] bg-white border border-[#d9d9d9]  rounded-[8px]  transition-all ease hover:bg-gray-200'>
                                                 <div className='w-[50px] h-[31px]'>
                                                     <span className=' flex justify-center items-center w-[30px] h-[30px] bg-orange-400 rounded-full text-white'>{item.first_name.charAt(0)}</span>
                                                 </div>
-                                                <span className='w-[200px] text-[16px] text-slate-500 font-semibold'>{`${item.first_name} ${item.last_name}`}</span>
+                                                <NavLink to={`/teacher_page/${item.id}`} >
+                                                    <span className='w-[200px] text-[16px] text-slate-500 font-semibold cursor-pointer'>{`${item.first_name} ${item.last_name}`}</span>
+                                                </NavLink>
                                                 <span className='w-[150px] text-[16px] text-slate-500'>{item.status}</span>
                                                 <span className='w-[150px] text-[16px] text-slate-500'>0</span>
                                                 <span className='w-[150px] text-[16px] text-slate-500'>{item.phone}</span>
-                                                <span className='w-[150px] text-[14px] text-slate-400 text-right'></span>
+                                                <button className='flex justify-end w-[145px] text-[18px] text-slate-600 text-right cursor-pointer'>
+                                                    <Dropdown menu={{ items }} trigger={['click']}>
+                                                        <a onClick={(e) => {
+                                                            e.preventDefault()
+                                                            setTeacherId(item.id)
+                                                        }}>
+                                                            <CiMenuKebab />
+                                                        </a>
+                                                    </Dropdown>
+                                                </button>
                                             </li>
                                         )
                                     })

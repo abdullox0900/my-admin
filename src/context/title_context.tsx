@@ -2,12 +2,12 @@ import { createContext, useState } from "react"
 
 import { childrenType } from '../types/children-type'
 
-type TextContext = {
-    title?: string
-    setTitle?: string
-}
+// type TextContext = {
+//     title?: string
+//     setTitle?: string | number
+// }
 
-const Context = createContext<TextContext>({})
+const Context = createContext({})
 
 function TextProvider(props: childrenType) {
 
